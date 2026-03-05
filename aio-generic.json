@@ -1,0 +1,143 @@
+{
+    "_comment": "=========================================================================",
+    "_comment": "PTERODACTYL PANEL - MASTER GENERIC EGG TEMPLATE",
+    "_comment": "=========================================================================",
+    "_comment": "Copyright © 2026 KopeeDev (CyeroX Development)",
+    "_comment": "Developer: KopeeDev",
+    "_comment": "Contact: notkopee@gmail.com",
+    "_comment": "Panel: CyeroX Dev",
+    "_comment": "Team: CyeroX Development",
+    "_comment": "=========================================================================",
+    "_comment": "This egg template combines configurations for:",
+    "_comment": "Bun, Dart, Deno, Elixir, C#, Java, Go, Luvit, Node.js, Nodemon, Python, Rust",
+    "_comment": "=========================================================================",
+    "_comment": "LICENSE: All rights reserved. This code is proprietary to CyeroX Development.",
+    "_comment": "Unauthorized copying, modification, distribution, or use is prohibited.",
+    "_comment": "=========================================================================",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null,
+        "_copyright": "Copyright 2026 KopeeDev - CyeroX Development - notkopee@gmail.com"
+    },
+    "exported_at": "2026-03-05T08:30:00+00:00",
+    "name": "Generic Master Template - CyeroX Dev",
+    "author": "KopeeDev <notkopee@gmail.com>",
+    "description": "A master template for generic Pterodactyl eggs developed by KopeeDev for CyeroX Development. Configure for Bun, Dart, Deno, Elixir, C#, Java, Go, Luvit, Node.js, Nodemon, Python, or Rust.",
+    "features": null,
+    "docker_images": {
+        "_copyright": "Copyright 2026 KopeeDev - CyeroX Development",
+        "_comment": "UNCOMMENT THE IMAGE YOU NEED AND DELETE OR COMMENT OUT THE OTHERS",
+        "Bun": "ghcr.io/parkervcp/yolks:bun",
+        "Dart": "ghcr.io/parkervcp/yolks:dart",
+        "Deno": "ghcr.io/parkervcp/yolks:deno",
+        "Elixir": "hexpm/elixir:1.15.7-erlang-26.0.2-debian-bullseye-20231009-slim",
+        "C# (Dotnet)": "ghcr.io/parkervcp/yolks:dotnet_sdk_8.0",
+        "Java 21": "ghcr.io/pterodactyl/yolks:java_21",
+        "Java 17": "ghcr.io/pterodactyl/yolks:java_17",
+        "Go": "ghcr.io/parkervcp/yolks:go_1.23",
+        "Luvit": "ghcr.io/parkervcp/yolks:luvit",
+        "Node.js 22": "ghcr.io/parkervcp/yolks:nodejs_22",
+        "Node.js 20": "ghcr.io/parkervcp/yolks:nodejs_20",
+        "Nodemon": "ghcr.io/parkervcp/yolks:nodejs_20",
+        "Python 3.12": "ghcr.io/parkervcp/yolks:python_3.12",
+        "Python 3.11": "ghcr.io/parkervcp/yolks:python_3.11",
+        "Rust": "ghcr.io/parkervcp/yolks:rust_1.82"
+    },
+    "file_denylist": [],
+    "startup": "{{STARTUP_CMD}}",
+    "config": {
+        "files": "{}",
+        "_comment_files": "If your app uses a config file (e.g., config.json, .env), define it here.",
+        "startup": {
+            "done": "Server started|Listening on|Running on|Example app listening"
+        },
+        "logs": {
+            "custom": false,
+            "location": "logs/latest.log"
+        },
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\n# =========================================================================\n# CyeroX Development - Generic Installation Script\n# Copyright © 2026 KopeeDev (notkopee@gmail.com)\n# Panel: CyeroX Dev | Team: CyeroX Development\n# =========================================================================\n# This script handles Git cloning and dependency installation for:\n# Bun, Dart, Deno, Elixir, C#, Java, Go, Luvit, Node.js, Nodemon, Python, Rust\n# =========================================================================\n\n# Exit if any command fails\nset -e\n\n# Display copyright information\necho \"=========================================================================\"\necho \"CyeroX Development - Generic Server Installer\"\necho \"Copyright © 2026 KopeeDev (notkopee@gmail.com)\"\necho \"Panel: CyeroX Dev | Team: CyeroX Development\"\necho \"=========================================================================\"\n\n# Update and install necessary packages\napt-get update\napt-get install -y git curl jq file tar unzip make gcc g++ python3\n\n# Create and move to the server directory\nmkdir -p \/mnt\/server\ncd \/mnt\/server\n\n# Handle Git Repository Clone or User Uploads\nif [[ \"{{GIT_REPO}}\" != \"\" ]] && [[ \"{{USER_UPLOAD}}\" == \"false\" ]] || [[ \"{{USER_UPLOAD}}\" == \"0\" ]]; then\n    echo \"📦 Cloning repository from {{GIT_REPO}} (branch: {{GIT_BRANCH}})...\"\n    git clone --recurse-submodules --depth 1 --branch \"{{GIT_BRANCH}}\" \"{{GIT_REPO}}\" .\n    echo \"✅ Repository cloned.\"\n\n    # --- LANGUAGE-SPECIFIC DEPENDENCY INSTALLATION ---\n    # Uncomment the block for your target language\n\n    << \"_comment_node\"\n    # For Node.js\/Nodemon\n    if [ -f \"package.json\" ]; then\n        echo \"📦 Installing Node.js dependencies with npm...\"\n        npm install --omit=dev\n        echo \"✅ npm install complete.\"\n    else\n        echo \"⚠️  No package.json found, skipping npm install.\"\n    fi\n    _comment_node\n\n    << \"_comment_python\"\n    # For Python\n    if [ -f \"requirements.txt\" ]; then\n        echo \"📦 Installing Python dependencies with pip...\"\n        pip install --no-cache-dir -r requirements.txt\n        echo \"✅ pip install complete.\"\n    else\n        echo \"⚠️  No requirements.txt found, skipping pip install.\"\n    fi\n    _comment_python\n\n    << \"_comment_go\"\n    # For Go (if building is required)\n    if [ -f \"go.mod\" ]; then\n        echo \"📦 Downloading Go modules...\"\n        go mod download\n        echo \"✅ go mod download complete.\"\n        echo \"🛠️  Building Go application...\"\n        go build -o {{GO_OUTPUT}} .\n        echo \"✅ Build complete: {{GO_OUTPUT}}\"\n    else\n        echo \"⚠️  No go.mod found, skipping.\"\n    fi\n    _comment_go\n\n    << \"_comment_rust\"\n    # For Rust\n    if [ -f \"Cargo.toml\" ]; then\n        echo \"🛠️  Building Rust application in release mode...\"\n        cargo build --release\n        echo \"✅ Build complete.\"\n    else\n        echo \"⚠️  No Cargo.toml found, skipping.\"\n    fi\n    _comment_rust\n\n    << \"_comment_java\"\n    # For Java (Maven)\n    if [ -f \"pom.xml\" ]; then\n        echo \"🛠️  Building Java application with Maven...\"\n        mvn clean package\n        echo \"✅ Maven build complete.\"\n    else\n        echo \"⚠️  No pom.xml found, skipping build.\"\n    fi\n    _comment_java\n\n    << \"_comment_csharp\"\n    # For C# (Dotnet)\n    if [ -f \"*.csproj\" ]; then\n        echo \"🛠️  Building C# application...\"\n        dotnet publish -c Release -o output\n        echo \"✅ Dotnet publish complete.\"\n    else\n        echo \"⚠️  No .csproj file found, skipping build.\"\n    fi\n    _comment_csharp\n\n    << \"_comment_elixir\"\n    # For Elixir\n    if [ -f \"mix.exs\" ]; then\n        echo \"📦 Installing Elixir dependencies...\"\n        mix local.hex --force\n        mix deps.get\n        echo \"✅ Mix dependencies installed.\"\n    else\n        echo \"⚠️  No mix.exs found, skipping.\"\n    fi\n    _comment_elixir\n\n    << \"_comment_dart\"\n    # For Dart\n    if [ -f \"pubspec.yaml\" ]; then\n        echo \"📦 Getting Dart packages...\"\n        dart pub get\n        echo \"✅ Dart packages installed.\"\n    else\n        echo \"⚠️  No pubspec.yaml found, skipping.\"\n    fi\n    _comment_dart\n\n    << \"_comment_bun\"\n    # For Bun\n    if [ -f \"package.json\" ]; then\n        echo \"📦 Installing Bun dependencies...\"\n        bun install\n        echo \"✅ Bun install complete.\"\n    else\n        echo \"⚠️  No package.json found, skipping bun install.\"\n    fi\n    _comment_bun\n\n    << \"_comment_deno\"\n    # For Deno (cache dependencies)\n    if [ -f \"deps.ts\" ] || [ -f \"import_map.json\" ]; then\n        echo \"📦 Caching Deno dependencies...\"\n        if [ -f \"main.ts\" ]; then\n            deno cache main.ts\n        elif [ -f \"main.js\" ]; then\n            deno cache main.js\n        fi\n        echo \"✅ Deno dependencies cached.\"\n    fi\n    _comment_deno\n\n    << \"_comment_luvit\"\n    # For Luvit\n    if [ -f \"package.json\" ] || [ -f \"lit.json\" ]; then\n        echo \"📦 Installing Luvit dependencies...\"\n        if [ -f \"package.json\" ]; then\n            lit install\n        fi\n        echo \"✅ Luvit dependencies installed.\"\n    fi\n    _comment_luvit\n\n    # --- END LANGUAGE-SPECIFIC INSTALLATION ---\n\nelse\n    echo \"📁 User upload mode selected or no Git repo provided. Skipping clone.\"\n    echo \"💡 Place your files in the \/mnt\/server directory.\"\nfi\n\n# Set ownership\nchown -R container:container \/mnt\/server\n\necho \"=========================================================================\"\necho \"✅ Installation completed successfully!\"\necho \"Copyright © 2026 KopeeDev - CyeroX Development\"\necho \"=========================================================================\"\nexit 0",
+            "container": "debian:bookworm-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Startup Command",
+            "description": "The command used to start your server or application.",
+            "env_variable": "STARTUP_CMD",
+            "default_value": "node index.js",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:500"
+        },
+        {
+            "name": "Git Repository URL",
+            "description": "The URL of the Git repository to clone (e.g., https://github.com/user/repo.git). Leave empty to use uploaded files.",
+            "env_variable": "GIT_REPO",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:255"
+        },
+        {
+            "name": "Git Branch",
+            "description": "The branch or tag to check out (default: master).",
+            "env_variable": "GIT_BRANCH",
+            "default_value": "master",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:100"
+        },
+        {
+            "name": "User Upload",
+            "description": "Set to true if you will upload files manually instead of using Git.",
+            "env_variable": "USER_UPLOAD",
+            "default_value": "false",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean"
+        },
+        {
+            "_comment": "Copyright 2026 KopeeDev - CyeroX Development - Additional Variables",
+            "name": "Go Output Binary Name",
+            "description": "(Go only) Name of the compiled output binary.",
+            "env_variable": "GO_OUTPUT",
+            "default_value": "app",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:50"
+        },
+        {
+            "name": "Java Jar File",
+            "description": "(Java only) The name of the jar file to run if not specified in the startup command.",
+            "env_variable": "JAR_FILE",
+            "default_value": "server.jar",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:50"
+        },
+        {
+            "name": "Main Entry File",
+            "description": "The main entry file for your application (index.js, main.py, main.ts, etc.)",
+            "env_variable": "MAIN_FILE",
+            "default_value": "index.js",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:100"
+        },
+        {
+            "name": "Nodemon Watch Mode",
+            "description": "(Nodemon only) Enable file watching for auto-restart.",
+            "env_variable": "NODEMON_WATCH",
+            "default_value": "true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean"
+        }
+    ],
+    "_copyright_notice": "Copyright © 2026 KopeeDev (notkopee@gmail.com) - CyeroX Development. All rights reserved."
+}
