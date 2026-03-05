@@ -3,7 +3,7 @@
 A complete collection of fully working generic eggs for the **Pterodactyl Panel**. This repository contains pre-configured eggs for all major runtimes – everything you need to deploy any application in one place.
 
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://dsc.gg/cyerox)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/KopeeDev/all-in-one-pterodactyl-eggs)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faisalgitt/all-in-one-pterodactyl-eggs)
 
 ## 📦 Included Eggs
 
